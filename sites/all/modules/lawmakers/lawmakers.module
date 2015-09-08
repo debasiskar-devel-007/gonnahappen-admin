@@ -235,6 +235,7 @@ function lawmakers_view_entity($lawmakers) {
   drupal_set_title($fullname);
   // Path not entity.
   $lawmakers_output = theme('lawmakers_full', array('lawmakers' => $lawmakers));
+    var_dump($lawmakers_output);
   return $lawmakers_output;
 }
 

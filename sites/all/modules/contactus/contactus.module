@@ -54,6 +54,100 @@ function contactus_entity_info() {
 }
 
 
+
+
+function contactus_menu() {
+    $items = array();
+
+    $items['contactus/%contactus'] = array(
+        'title' => 'Lawmakers',
+        'page callback' => 'contactus_view_entity',
+        'page arguments' => array(1),
+        'access callback' => 'contactus_access_menu_callback',
+        'access arguments' => array('view', 1),
+    );
+
+    $items['contact/locate'] = array(
+        'page callback' => 'contact_locate_callback',
+        'access arguments' => array('access content'),
+    );
+
+    $items['admin/content/contact/bulk/delete/%'] = array(
+        'title' => 'Bulk Delete contacts',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('lawmakers_bulk_delete', 5),
+        'access arguments' => array('administer contact entities'),
+        'file' => 'includes/contactus.admin.inc',
+    );
+
+    $items['admin/structure/contactus'] = array(
+        'title' => 'contactus Fields',
+        'access arguments' => array('administer contact entities'),
+        'type' => MENU_NORMAL_ITEM,
+    );
+
+    return $items;
+}
+
+
+
+
+
+
+
+/**
+ * Check access permission for Lawmakers Entity UI.
+ */
+function contactus_access_menu_callback($op, $lawmakers = NULL, $account = NULL) {
+    switch ($op) {
+        case 'view':
+            return user_access('view contact entities', $account);
+
+        case 'create':
+            return user_access('create contact entities', $account);
+
+        case 'update':
+            return user_access('edit contact entities', $account);
+
+        case 'delete':
+            return user_access('delete contact entities', $account);
+    }
+
+    return FALSE;
+}
+
+
+
+
+
+/**
+ * Help function api data.
+ */
+function contact_locate_callback() {
+
+    $params = drupal_get_query_parameters();
+
+    if (isset($params['state'])) {
+        $conditions = $params['state'];
+        $result = lawmakers_entity_query($conditions);
+        $data = lawmakers_load_multiple($result);
+        drupal_json_output($data);
+    }
+    elseif (isset($params['party']) && isset($params['chamber'])) {
+        $chamber = array('title' => $params['chamber']);
+        $party = array('party' => $params['party']);
+        $conditions = array_merge($party, $chamber);
+        $result = lawmakers_entity_query($conditions);
+        $data = lawmakers_load_multiple($result);
+        drupal_json_output($data);
+    }
+
+}
+
+
+
+
+
 /**
  * Custom controller for the lawmakers entity.
  */
@@ -246,6 +340,59 @@ class contactusUIController extends EntityDefaultUIController {
     }
 
 }
+
+
+function contactus_entity_query($conditions = array()) {
+
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'contactus');
+
+    // Apply conditions.
+    foreach ($conditions as $key => $value) {
+        $query->propertyCondition($key, $value);
+    }
+
+    $result = $query->execute();
+
+    if (isset($result['contactus'])) {
+        $contact = array_keys($result['contactus']);
+    }
+    else {
+        $contact = array();
+    }
+
+    return $contact;
+}
+
+/**
+ * Label callback for lawmakers entities, for menu router, etc.
+ */
+function contactus_label_callback($contact, $type) {
+    return empty($contact->username) ? 'Untitled Contact' : $contact->first_name;
+}
+
+/**
+ * Saves Lawmaker to database.
+ */
+function contactus_save(contactus $contact) {
+    return $contact->save();
+}
+
+
+
+function contactus_view_entity($lawmakers) {
+    //echo 5656;
+    //exit;
+    $fullname = $lawmakers->firstname . ' ' . $lawmakers->lastname;
+    drupal_set_title($fullname);
+    // Path not entity.
+    $lawmakers_output = theme('lawmakers_full', array('lawmakers' => $lawmakers));
+    //var_dump($lawmakers_output);
+    return $lawmakers_output;
+}
+
+
+
 
 class contactus extends Entity {
     /**
