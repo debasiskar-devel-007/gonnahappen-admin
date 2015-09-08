@@ -7,7 +7,7 @@
 /**
  * Theme lawmaker full page.
  */
-function theme_lawmakers_full($variables) {
+function theme_contactus_full($variables) {
   $output = '';
   $lawmakers = $variables['lawmakers'];
   $lawmakers_image_size = '200x250';

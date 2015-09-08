@@ -33,7 +33,7 @@ function lawmakers_entity_info() {
     'admin ui' => array(
       'path' => 'admin/content/lawmakers',
       'controller class' => 'LawmakersUIController',
-      'file' => 'includes/contactus.admin.inc',
+      'file' => 'includes/lawmakers.admin.inc',
     ),
     'module' => 'lawmakers',
     'access callback' => 'lawmakers_access_callback',
@@ -76,7 +76,7 @@ function lawmakers_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('lawmakers_bulk_delete', 5),
     'access arguments' => array('administer lawmakers entities'),
-    'file' => 'includes/contactus.admin.inc',
+    'file' => 'includes/lawmakers.admin.inc',
   );
 
   $items['admin/structure/lawmakers'] = array(
@@ -183,7 +183,7 @@ function lawmakers_theme() {
   return array(
     'lawmakers_full' => array(
       'variables' => array('lawmakers' => NULL),
-      'file' => 'includes/contactus.theme.inc',
+      'file' => 'includes/lawmakers.theme.inc',
     ),
   );
 }
