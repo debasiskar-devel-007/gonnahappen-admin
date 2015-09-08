@@ -85,7 +85,7 @@ $form['enquiry_type'] = array(
       '#value' => isset($contacts->contact_id) ? t('Update contact us') : t('Save Contact'),
     ),
     'delete_link' => array(
-      '#markup' => isset($contacts->contact_id) ? l(t('Delete'), 'admin/content/contactus/manage/' . $contacts->contact_idcontact_id . '/delete', array('attributes' => array('id' => array('contactus-delete-' . $contacts->contact_id), 'class' => array('button remove')), 'query' => array('destination' => 'admin/content/contactus'))) : ''));
+      '#markup' => isset($contacts->contact_id) ? l(t('Delete'), 'admin/content/contactus/manage/' . $contacts->contact_id . '/delete', array('attributes' => array('id' => array('contactus-delete-' . $contacts->contact_id), 'class' => array('button remove')), 'query' => array('destination' => 'admin/content/contactus'))) : ''));
   return $form;
 }
 
