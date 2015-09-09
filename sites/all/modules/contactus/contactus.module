@@ -72,10 +72,10 @@ function contactus_menu() {
         'access arguments' => array('access content'),
     );
 
-    $items['admin/content/contact/bulk/delete/%'] = array(
+    $items['admin/content/contactus/bulk/delete/%'] = array(
         'title' => 'Bulk Delete contacts',
         'page callback' => 'drupal_get_form',
-        'page arguments' => array('lawmakers_bulk_delete', 5),
+        'page arguments' => array('contactus_bulk_delete', 5),
         'access arguments' => array('administer contact entities'),
         'file' => 'includes/contactus.admin.inc',
     );
@@ -141,16 +141,16 @@ function contact_locate_callback() {
 
     if (isset($params['state'])) {
         $conditions = $params['state'];
-        $result = lawmakers_entity_query($conditions);
-        $data = lawmakers_load_multiple($result);
+        $result = contactus_entity_query($conditions);
+        $data = contactus_load_multiple($result);
         drupal_json_output($data);
     }
     elseif (isset($params['party']) && isset($params['chamber'])) {
         $chamber = array('title' => $params['chamber']);
         $party = array('party' => $params['party']);
         $conditions = array_merge($party, $chamber);
-        $result = lawmakers_entity_query($conditions);
-        $data = lawmakers_load_multiple($result);
+        $result = contactus_entity_query($conditions);
+        $data = contactus_load_multiple($result);
         drupal_json_output($data);
     }
 
@@ -354,6 +354,8 @@ class contactusUIController extends EntityDefaultUIController {
 }
 
 
+
+
 function contactus_entity_query($conditions = array()) {
 
     $query = new EntityFieldQuery();
@@ -443,6 +445,9 @@ function contactus_delete(lawmakers $contacts) {
  * Delete multiple lawmakers.
  */
 function contactus_delete_multiple(array $contact__ids) {
+    //var_dump($contact__ids);
+    //exit;
+
     entity_get_controller('contactus')->delete($contact__ids);
 }
 

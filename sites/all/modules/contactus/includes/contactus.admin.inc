@@ -141,12 +141,20 @@ function contactus_form_submit($form, &$form_state) {
 /**
  * Confirmation before bulk deleting lawmakers.
  */
-function contactus_bulk_delete($form, &$form_state, $lawmakers_ids) {
-  $lawmakers_ids = explode('|', $lawmakers_ids);
-  $lawmakers = lawmakers_load_multiple($lawmakers_ids);
+function contactus_bulk_delete($form, &$form_state, $contact_ids) {
+    $contact_ids = explode('|', $contact_ids);
+  $contacts = contactus_load_multiple($contact_ids);
 
   $form = array();
-  $form_state['lawmakers_ids'] = $lawmakers_ids;
+   //$form_state['contact_ids'] = $contact_ids;
+    //var_dump($form_state['contact_ids']);
+    foreach($contact_ids as $cid){
+
+        $form_state['contact_ids'][]=str_replace('contact_id-','',$cid);
+
+    }
+
+    //var_dump($form_state['contact_ids']);
 
   $variables = array(
     'type' => 'ul',
@@ -155,8 +163,8 @@ function contactus_bulk_delete($form, &$form_state, $lawmakers_ids) {
     'attributes' => array(),
   );
 
-  foreach ($lawmakers as $lawmaker) {
-    $variables['items'][] = $lawmaker->username;
+  foreach ($contacts as $contact) {
+    echo $variables['items'][] = $contact->first_name;
   }
 
   $form['summary'] = array(
@@ -170,9 +178,11 @@ function contactus_bulk_delete($form, &$form_state, $lawmakers_ids) {
  * Implements hook_submit().
  */
 function contactus_bulk_delete_submit($form, &$form_state) {
-  $lawmakers_ids = $form_state['lawmakers_ids'];
-  lawmakers_delete_multiple($lawmakers_ids);
+  $contact_ids = $form_state['contact_ids'];
+    //var_dump($contact_ids);
+    //exit;
+  contactus_delete_multiple($contact_ids);
 
-  drupal_set_message(t('lawmakers deleted'));
-  drupal_goto('admin/content/lawmakers');
+  drupal_set_message(t('contact deleted'));
+  drupal_goto('admin/content/contactus');
 }
