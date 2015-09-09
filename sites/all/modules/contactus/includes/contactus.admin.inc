@@ -56,27 +56,45 @@ $form['comments'] = array(
   );
 
 $form['postedon'] = array(
-    '#title' => t('comments'),
-    '#type' => 'textfield',
+    '#title' => t('postedon'),
+    '#type' => 'hidden',
     '#default_value' => isset($contacts->postedon) ? $contacts->postedon : '',
     '#description' => t('postedon.'),
     '#required' => TRUE,
     '#maxlength' => 255,
+    '#value'=>time()
   );
 
-$form['enquiry_type'] = array(
+/*$form['enquiry_type'] = array(
     '#title' => t('enquiry_type'),
     '#type' => 'textfield',
     '#default_value' => isset($contacts->enquiry_type) ? $contacts->enquiry_type : '',
     '#description' => t('enquiry_type.'),
     '#required' => TRUE,
     '#maxlength' => 255,
-  );
+  );*/
+
+    $options = array();
+    $options["Site_Visitor"] = "Site Visitor";
+    $options["Event_Poster"] = "Event Poster";
+    $options["Ticket_Sales"] = "Ticket Sales";
+    $options["Tournament_Enquiry"] = "Tournament Enquiry";
+    $options["General_Question"] = "General Question ";
+
+
+    $form['enquiry_type'] = array(
+        '#title' => t('Enquiry Type'),
+        '#type' => 'checkboxes',
+        '#description' => t(''),
+        '#options' => $options,
+        '#required' => TRUE,
+        //'#default_value' => array("1", "2", "3","4")
+    );
 
 
 
 
-  field_attach_form('contactus', $contacts, $form, $form_state);
+    field_attach_form('contactus', $contacts, $form, $form_state);
 
   $form['actions'] = array(
     '#type' => 'actions',
@@ -93,13 +111,26 @@ $form['enquiry_type'] = array(
  * Implements hook_form_validate().
  */
 function contactus_form_validate($form, &$form_state) {
+
+
+    $mail = $form_state['values']['email'];
+    if (!valid_email_address($mail)) {
+        form_set_error('[email]', t('The email address appears to be invalid.'));
+    }
+
+
+
 }
 
 /**
  * Implements hook_form_submit().
  */
 function contactus_form_submit($form, &$form_state) {
-  $contactus = entity_ui_form_submit_build_entity($form, $form_state);
+
+    $form_state['values']['enquiry_type']=implode("|",$form_state['values']['enquiry_type']);
+   // var_dump($form_state['values']);
+   // exit;
+    $contactus = entity_ui_form_submit_build_entity($form, $form_state);
     $contactus->save();
   drupal_set_message(t('@first_name contact has been saved.', array('@first_name' => $contactus->first_name)));
   // $form_state['redirect'] = 'admin/content/lawmakers';

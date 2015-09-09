@@ -9,43 +9,43 @@
  */
 function theme_contactus_full($variables) {
   $output = '';
-  $lawmakers = $variables['lawmakers'];
-  $lawmakers_image_size = '200x250';
+  $contacts = $variables['contact'];
+  /*$lawmakers_image_size = '200x250';
   $image_data = array(
     'path' => drupal_get_path('module', 'lawmakers') . '/images/' . $lawmakers_image_size . '/' . $lawmakers->bioguide_id . '.jpg',
-  );
+  );*/
 
-  $output .= '<div class="lawmakers_meta">';
+  $output .= '<div class="contact_meta">';
 
   // Lazy...
-  $output .= '<div class="image" style="float: left; margin-right: 20px">' . theme('image', $image_data) . '</div>';
-  $output .= '<div class="lawmakers-name">' . trim($lawmakers->title) . '. ' . trim($lawmakers->firstname)  . ' ' . trim($lawmakers->lastname) . '</div>';
-  $output .= '<div class="party">' . $lawmakers->party . ' ' . $lawmakers->state  . '  ' . $lawmakers->district . '</div>';
-  $output .= '<div class="congress_office">' . $lawmakers->congress_office .  '</div>';
-  $output .= '<div class="phone">tel: ' . $lawmakers->phone .  '</div>';
-  $output .= '<div class="fax">fax: ' . $lawmakers->fax .  '</div>';
 
-  if (!empty($lawmakers->website)) {
-    $output .= '<div class="website"> ' . l(t('website'), $lawmakers->website, array('attributes' => array('target' => '_blank'))) . '</div>';
+  $output .= '<div class="contact-name">'  . trim($contacts->first_name)  . ' ' . trim($contacts->last_name) . '</div>';
+  $output .= '<div class="contact-email">'  . trim($contacts->email)  . '</div>';
+  $output .= '<div class="contact-phone">'  . trim($contacts->phone)  . '</div>';
+  $output .= '<div class="contact-comments">'  . trim($contacts->comments)  . '</div>';
+  $output .= '<div class="contact-postedon">'  . trim(date('m / d / Y , H:i',($contacts->postedon)))  . '</div>';
+
+  $enquiry_type=explode('|',$contacts->enquiry_type);
+  //var_dump($enquiry_type);
+  foreach($enquiry_type as $val){
+
+
+    if(strlen($val) > 1){
+      //var_dump($val);
+
+      $output .= '<div class="contact-enquiry_type">'  . trim( str_replace('_'," ",$val))  . '</div>';
+    }
+
+
+
   }
 
-  if (!empty($lawmakers->webform)) {
-    $output .= '<div class="contact_form">' . l(t('contact form'), $lawmakers->webform) .  '</div>';
-  }
+  //$output .= '<div class="contact-enquiry_type">'  . trim($contacts->enquiry_type)  . '</div>';
+ // $output .= '<div class="party">' . $lawmakers->party . ' ' . $lawmakers->state  . '  ' . $lawmakers->district . '</div>';
 
-  $output .= '<div class="social_media">Social Info</div>';
-
-  if (!empty($lawmakers->twitter_id)) {
-    $output .= '<div class="twitter">' . l(t('twitter'), 'http://twitter.com/' . $lawmakers->twitter_id, array('attributes' => array('target' => '_blank'))) . '</div>';
-  }
-
-  if (!empty($lawmakers->youtube_url)) {
-    $output .= '<div class="youtube">' . l(t('youtube'), $lawmakers->youtube_url, array('attributes' => array('target' => '_blank'))) . '</div>';
-  }
-
-  if (user_access('administer lawmakers entities') && isset($lawmakers->lawmakers_id)) {
+  if (user_access('administer contact entities') && isset($contacts->contact_id)) {
     $edit_link = '<ul class="tabs primary"><li>';
-    $edit_link .= l(t('Edit'), 'admin/content/lawmakers/manage/' . $lawmakers->lawmakers_id, array('attributes' => array('class' => 'admin-edit-link')));
+    $edit_link .= l(t('Edit'), 'admin/content/contactus/manage/' . $contacts->contact_id, array('attributes' => array('class' => 'admin-edit-link')));
     $edit_link .= '</li></ul>';
     $output .= $edit_link;
   }
