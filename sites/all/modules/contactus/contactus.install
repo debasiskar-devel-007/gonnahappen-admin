@@ -66,6 +66,15 @@ function contactus_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
+      'search_tag' => array(
+        'description' => 'search_tag',
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+        'default' => '',
+      ),
+
+
     ),
     'primary key' => array('contact_id'),
 

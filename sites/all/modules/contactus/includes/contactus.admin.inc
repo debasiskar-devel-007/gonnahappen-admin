@@ -88,9 +88,16 @@ $form['postedon'] = array(
         '#description' => t(''),
         '#options' => $options,
         '#required' => TRUE,
+        '#default_value' => isset($contacts->enquiry_type) ? explode('|',$contacts->enquiry_type) : ''
+    );
+    $form['search_tag'] = array(
+        '#title' => t('search_tags'),
+        '#type' => 'hidden',
+        '#description' => t(''),
+        //'#options' => $options,
+        //'#required' => TRUE,
         //'#default_value' => array("1", "2", "3","4")
     );
-
 
 
 
@@ -128,6 +135,7 @@ function contactus_form_validate($form, &$form_state) {
 function contactus_form_submit($form, &$form_state) {
 
     $form_state['values']['enquiry_type']=implode("|",$form_state['values']['enquiry_type']);
+    $form_state['values']['search_tag']=$form_state['values']['enquiry_type'].$form_state['values']['first_name'].$form_state['values']['last_name'];
    // var_dump($form_state['values']);
    // exit;
     $contactus = entity_ui_form_submit_build_entity($form, $form_state);

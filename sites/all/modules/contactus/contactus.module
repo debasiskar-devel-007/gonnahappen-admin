@@ -229,9 +229,10 @@ class contactusUIController extends EntityDefaultUIController {
         //echo 656;
 
         $header = array(
-            'contact_id' => array('data' => t('Contact  ID'), 'field' => 'contact_id'),
+            //'contact_id' => array('data' => t('Contact  ID'), 'field' => 'contact_id'),
             'first_name' => array('data' => t('First Name'), 'field' => 'first_name'),
             'last_name' => array('data' => t('last name'), 'field' => 'last_name'),
+            'enquiry_type' => array('data' => t('Enquiry Type'), 'field' => 'enquiry_type'),
             'operations' => array('data' => t('Operations'), 'field' => 'operations'),
         );
 
@@ -239,11 +240,14 @@ class contactusUIController extends EntityDefaultUIController {
         $search_term = !empty($_GET['search']) ? $_GET['search'] : NULL;
 
         $query = new EntityFieldQuery();
-        $query
-            ->entityCondition('entity_type', 'contactus');
+        $query->entityCondition('entity_type', 'contactus');
 
         if (!empty($search_term)) {
-            $query->propertyCondition('first_name', '%' . $search_term . '%', 'like');
+
+            //var_dump($search_term);
+            $query->propertyCondition('search_tag', '%' . $search_term . '%', 'like');
+            //$query->propertyCondition('last_name', '%' . $search_term . '%', 'like','OR');
+           // $query->propertyCondition('enquiry_type', '%' . str_replace(' ','_',$search_term) . '%', 'like');
         }
         // Check for sort order and sort key.
         if (!empty($_GET['sort']) && !empty($_GET['order'])) {
@@ -266,9 +270,10 @@ class contactusUIController extends EntityDefaultUIController {
        // exit;
         foreach ($contactus_array as $contact_id => $contactus) {
             $options['contact_id-' . $contact_id] = array(
-                'contact_id' => l($contactus->contact_id, 'contactus/' . $contactus->contact_id),
+                //'contact_id' => l($contactus->contact_id, 'contactus/' . $contactus->contact_id),
                 'first_name' => l($contactus->first_name, 'contactus/' . $contactus->contact_id),
-                'last_name' => l($contactus->last_name, 'contactus/' . $contactus->last_name),
+                'last_name' => l($contactus->last_name, 'contactus/' . $contactus->contact_id),
+                'enquiry_type' => l(show_enquiry_in_detail($contactus->enquiry_type), 'contactus/' . $contactus->contact_id),
                 'operations' =>
                     l(t('View'), 'contactus/' . $contactus->contact_id) . ' ' .
                     l(t('Edit'), ADMIN_CONTENT_CONTACTUS_MANAGE_URI . $contact_id ,array('query' => array('destination' => ADMIN_CONTENT_CONTACTUS_MANAGE_URI))) . ' ' .
@@ -353,7 +358,10 @@ class contactusUIController extends EntityDefaultUIController {
 
 }
 
+function show_enquiry_in_detail($enqueystring){
 
+    return $enqueystring=str_replace(array('|','0','_'),array(' ','',' '),$enqueystring);
+}
 
 
 function contactus_entity_query($conditions = array()) {
