@@ -41,7 +41,7 @@ function theme_contactus_full($variables) {
   }
 
   //$output .= '<div class="contact-enquiry_type">'  . trim($contacts->enquiry_type)  . '</div>';
- // $output .= '<div class="party">' . $lawmakers->party . ' ' . $lawmakers->state  . '  ' . $lawmakers->district . '</div>';
+  // $output .= '<div class="party">' . $lawmakers->party . ' ' . $lawmakers->state  . '  ' . $lawmakers->district . '</div>';
 
   if (user_access('administer contact entities') && isset($contacts->contact_id)) {
     $edit_link = '<ul class="tabs primary"><li>';
